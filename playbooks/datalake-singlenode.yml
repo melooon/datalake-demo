@@ -1,0 +1,15 @@
+---
+- name: Install a single node cluster datalake
+  hosts: localhost
+
+  tasks:
+    - name: install snap package
+      apt:
+        pkg: snap
+      become: yes
+
+    - name: install microk8s
+      community.general.snap:
+        name: microk8s
+        classic: yes
+      become: yes
