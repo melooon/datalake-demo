@@ -21,6 +21,12 @@
         groups: microk8s
       become: yes
 
+    - name: install helm
+      community.general.snap:
+        name: helm
+        classic: yes
+      become: yes
+
     - name: add  helm repositories
       kubernetes.core.helm_repository:
         name:  "{{ item.name }}"
