@@ -13,3 +13,10 @@
         name: microk8s
         classic: yes
       become: yes
+
+    - name: add user to microk8s group
+      ansible.builtin.user:
+        name: demo
+        append: true
+        groups: microk8s
+      become: yes
