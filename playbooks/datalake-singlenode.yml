@@ -16,7 +16,25 @@
 
     - name: add user to microk8s group
       ansible.builtin.user:
-        name: demo
+        name: "{{ lookup('env','USER') }}"
         append: true
         groups: microk8s
       become: yes
+
+    - name: add  helm repositories
+      kubernetes.core.helm_repository:
+        name:  "{{ item.name }}"
+        repo_url: "{{ item.repo_url }}"
+      with_items:
+        - name: apache-airflow
+          repo_url: https://airflow.apache.org
+        - name: trino
+          repo_url: https://trinodb.github.io/charts
+        - name:  bitnami
+          repo_url: https://charts.bitnami.com/bitnami
+        - name: minio-operator
+          repo_url: https://operator.min.io
+        - name: gitea-charts
+          repo_url: https://dl.gitea.com/charts/
+        - name: harbor
+          repo_url: https://helm.goharbor.io
