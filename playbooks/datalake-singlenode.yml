@@ -60,3 +60,9 @@
         classic: yes
       become: yes
 
+    - name: Create the datalake namespace
+      kubernetes.core.k8s:
+        name: datalake
+        api_version: v1
+        kind: Namespace
+        state: present
