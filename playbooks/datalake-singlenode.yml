@@ -60,6 +60,11 @@
         classic: yes
       become: yes
 
+    - name: install pip package
+      apt:
+        pkg: python3-kubernetes
+      become: yes
+
     - name: Create the datalake namespace
       kubernetes.core.k8s:
         name: datalake
