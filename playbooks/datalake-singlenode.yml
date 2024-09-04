@@ -44,3 +44,13 @@
           repo_url: https://dl.gitea.com/charts/
         - name: harbor
           repo_url: https://helm.goharbor.io
+      
+    - name: Check if file exists
+      stat:
+        path: "{{ lookup('env','HOME') }}/.kube/config"
+      register: kube_config
+
+    - name: setup kube config
+      ansible.builtin.shell: "mkdir .kube && microk8s.config > {{ lookup('env','HOME') }}/.kube/config"
+      when: not kube_config.stat.exists
+
