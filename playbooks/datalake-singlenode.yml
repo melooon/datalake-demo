@@ -51,6 +51,12 @@
       register: kube_config
 
     - name: setup kube config
-      ansible.builtin.shell: "mkdir .kube && microk8s.config > {{ lookup('env','HOME') }}/.kube/config"
+      ansible.builtin.shell: "mkdir {{ lookup('env','HOME') }}/.kube && microk8s.config > {{ lookup('env','HOME') }}/.kube/config"
       when: not kube_config.stat.exists
+
+    - name: install kubectl
+      community.general.snap:
+        name: kubectl
+        classic: yes
+      become: yes
 
