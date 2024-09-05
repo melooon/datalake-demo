@@ -27,6 +27,16 @@
         classic: yes
       become: yes
 
+    - name: Check if helm completion exists
+      stat:
+        path: /etc/bash_completion.d/helm
+      register: helm_completion
+
+    - name: setup kube config
+      ansible.builtin.shell: "helm completion bash > /etc/bash_completion.d/helm"
+      become: yes
+      when: not helm_completion.stat.exists
+
     - name: add  helm repositories
       kubernetes.core.helm_repository:
         name:  "{{ item.name }}"
@@ -45,7 +55,7 @@
         - name: harbor
           repo_url: https://helm.goharbor.io
       
-    - name: Check if file exists
+    - name: Check if kube config exists
       stat:
         path: "{{ lookup('env','HOME') }}/.kube/config"
       register: kube_config
@@ -60,10 +70,30 @@
         classic: yes
       become: yes
 
+    - name: Check if kubectl completion exists
+      stat:
+        path: /etc/bash_completion.d/kubectl
+      register: kubectl_completion
+
+    - name: setup kube config
+      ansible.builtin.shell: "kubectl completion bash > /etc/bash_completion.d/kubectl"
+      become: yes
+      when: not kubectl_completion.stat.exists
+
     - name: install pip package
       apt:
         pkg: python3-kubernetes
       become: yes
+
+    - name: check ingress status
+      shell: microk8s status -a ingress
+      register: microk8s_ingress
+      
+
+    - name: enable ingress
+      shell: microk8s enable ingress
+      when: microk8s_ingress.stdout == "disabled"
+
 
     - name: Create the datalake namespace
       kubernetes.core.k8s:
