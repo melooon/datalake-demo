@@ -108,8 +108,17 @@
         chart_version: 10.4.0
         release_namespace: datalake
         values_files:
-          - files/gitea_values.yml
+          - ../files/gitea_values.yml
     
+    - name: Deploy harbor 1.15.1
+      kubernetes.core.helm:
+        name: harbor
+        chart_ref: harbor/harbor
+        chart_version: 1.15.1
+        release_namespace: datalake
+        values_files:
+          - ../files/harbor_values.yml
+
     - name: Deploy trino 0.28.0
       kubernetes.core.helm:
         name: trino
@@ -117,4 +126,4 @@
         chart_version: 0.28.0
         release_namespace: datalake
         values_files:
-          - files/trino_values.yml
+          - ../files/trino_values.yml
