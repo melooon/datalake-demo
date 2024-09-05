@@ -90,11 +90,9 @@
       register: microk8s_ingress
       changed_when: false
       
-
     - name: enable ingress
       shell: microk8s enable ingress
       when: microk8s_ingress.stdout == "disabled"
-
 
     - name: Create the datalake namespace
       kubernetes.core.k8s:
@@ -102,3 +100,12 @@
         api_version: v1
         kind: Namespace
         state: present
+    
+    - name: Deploy trino 0.28.0
+      kubernetes.core.helm:
+        name: trino
+        chart_ref: trino/trino
+        chart_version: 0.28.0
+        release_namespace: datalake
+        values_files:
+          - files/trino_values.yml
