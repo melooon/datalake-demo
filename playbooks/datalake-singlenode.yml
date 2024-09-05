@@ -88,6 +88,7 @@
     - name: check ingress status
       shell: microk8s status -a ingress
       register: microk8s_ingress
+      changed_when: false
       
 
     - name: enable ingress
